@@ -83,7 +83,7 @@ def rms_norm_forward(
   ]
   method = pl.pallas_call(
       kernel,
-      compiler_params=dict(triton=dict(num_warps=num_warps)),
+      num_warps=num_warps,
       grid=(),
       out_shape=out_shape,
       debug=False,
@@ -197,7 +197,7 @@ def rms_norm_backward(
   out_shape_dx = jax.ShapeDtypeStruct(shape=(n,), dtype=x.dtype)
   method = pl.pallas_call(
       kernel,
-      compiler_params=dict(triton=dict(num_warps=num_warps)),
+      num_warps=num_warps,
       grid=(),
       out_shape=out_shape_dx,
       debug=False,
@@ -229,7 +229,7 @@ def rms_norm_backward(
   grid_ = (pl.cdiv(reshaped_x.shape[1], block_n),)
   method = pl.pallas_call(
       kernel,
-      compiler_params=dict(triton=dict(num_warps=num_warps)),
+      num_warps=num_warps,
       grid=grid_,
       out_shape=out_shape_dwbias,
       debug=False,
@@ -265,9 +265,8 @@ def rms_norm(
   out_shape = jax.ShapeDtypeStruct(shape=(n,), dtype=x.dtype)
   method = pl.pallas_call(
       kernel,
-      compiler_params=dict(
-          triton=dict(num_warps=num_warps, num_stages=num_stages)
-      ),
+      num_warps=num_warps,
+      num_stages=num_stages,
       grid=(),
       out_shape=out_shape,
       debug=False,

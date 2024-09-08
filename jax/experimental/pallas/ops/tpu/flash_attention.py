@@ -745,7 +745,6 @@ def _flash_attention_impl(
       ),
       out_shape=out_shape,
       debug=debug,
-      compiler_params=dict(
           mosaic=dict(
               dimension_semantics=(
                   "parallel",
@@ -753,8 +752,7 @@ def _flash_attention_impl(
                   "parallel",
                   "arbitrary",
               )
-          )
-      ),
+          ),
   )(q, k, v, ab, q_segment_ids, kv_segment_ids)
   if save_residuals:
     l, m = (v[..., 0] for v in aux[-2:])
@@ -1105,7 +1103,6 @@ def _flash_attention_bwd_dkv(
         ),
         out_shape=out_shapes,
         debug=debug,
-        compiler_params=dict(
             mosaic=dict(
                 dimension_semantics=(
                     "parallel",
@@ -1113,8 +1110,7 @@ def _flash_attention_bwd_dkv(
                     "parallel",
                     "arbitrary",
                 )
-            )
-        ),
+            ),
     )(q, k, v, ab, q_segment_ids, kv_segment_ids, l, m, do, di)
     assert dk.shape == k.shape
     assert dv.shape == v.shape
@@ -1450,7 +1446,7 @@ def _flash_attention_bwd_dq(
         ),
         out_shape=out_shapes,
         debug=debug,
-        compiler_params=dict(
+        
             mosaic=dict(
                 dimension_semantics=(
                     "parallel",
@@ -1459,7 +1455,7 @@ def _flash_attention_bwd_dq(
                     "arbitrary",
                 )
             )
-        ),
+        
     )(q, k, v, ab, q_segment_ids, kv_segment_ids, l, m, do, di)
 
   # dab is just ds
